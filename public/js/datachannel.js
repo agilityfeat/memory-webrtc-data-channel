@@ -19,6 +19,11 @@ var configuration = {
 	}]
 };
 var rtcPeerConn;
+var dataChannelOptions = {
+	ordered: false, //no guaranteed delivery, unreliable but faster 
+	maxRetransmitTime: 1000, //milliseconds
+};
+var dataChannel;
 
 
 io = io.connect();
@@ -61,7 +66,11 @@ io.on('signaling_message', function(data) {
 
 function startSignaling() {
 	displaySignalMessage("starting signaling...");
-	rtcPeerConn = new webkitRTCPeerConnection(configuration);
+	rtcPeerConn = new webkitRTCPeerConnection(configuration, null);
+	dataChannel = rtcPeerConn.createDataChannel('textMessages', dataChannelOptions);
+				
+	dataChannel.onopen = dataChannelStateChanged;
+	rtcPeerConn.ondatachannel = receiveDataChannel;
 	
 	// send any ice candidates to the other peer
 	rtcPeerConn.onicecandidate = function (evt) {
@@ -86,12 +95,37 @@ function startSignaling() {
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 	navigator.getUserMedia({
 		'audio': false,
-		'video': true
+		'video': {
+			mandatory: {
+				minWidth: 320,
+				maxWidth: 320,
+				minHeight: 180,
+				maxHeight: 180
+			}
+		}
 	}, function (stream) {
 		displaySignalMessage("going to display my stream...");
 		myVideoArea.src = URL.createObjectURL(stream);
 		rtcPeerConn.addStream(stream);
 	}, logError);
+}
+
+function dataChannelStateChanged() {
+	if (dataChannel.readyState === 'open') {
+		displaySignalMessage("Data Channel open");
+		dataChannel.onmessage = receiveDataChannelMessage;
+	}
+}
+
+function receiveDataChannel(event) {
+	displaySignalMessage("Receiving a data channel");
+	dataChannel = event.channel;
+	dataChannel.onmessage = receiveDataChannelMessage;
+}
+
+function receiveDataChannelMessage(event) {
+	displaySignalMessage("Incoming Message");
+	displayMessage("From DataChannel: " + event.data);
 }
 
 function sendLocalDesc(desc) {
