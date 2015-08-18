@@ -8,7 +8,19 @@ It is for educational purposes only, and any other use is done at your own risk.
 
 //datachannel.js:  This file contains the WebRTC and DataChannel specific code
 
-//Signaling Code
+//Page controls
+var myName = document.querySelector("#myName");
+var myMessage = document.querySelector("#myMessage");
+var sendMessage = document.querySelector("#sendMessage");
+var chatArea = document.querySelector("#chatArea");
+var signalingArea = document.querySelector("#signalingArea");
+
+sendMessage.addEventListener('click', function(ev){
+	dataChannel.send(myName.value + " says " + myMessage.value);
+	ev.preventDefault();
+}, false);
+
+//Signaling Code Setup
 var SIGNAL_ROOM = "signaling";
 var myVideoArea = document.querySelector("#myVideoTag");
 var theirVideoArea = document.querySelector("#theirVideoTag");
@@ -23,7 +35,6 @@ var dataChannelOptions = {
 	maxRetransmitTime: 1000, //milliseconds
 };
 var dataChannel;
-
 
 io = io.connect();
 io.emit('ready', {"signal_room": SIGNAL_ROOM});
@@ -101,6 +112,14 @@ function startSignaling() {
 	}, logError);
 }
 
+function sendLocalDesc(desc) {
+	rtcPeerConn.setLocalDescription(desc, function () {
+		displaySignalMessage("sending local description");
+		io.emit('signal',{"type":"SDP", "message": JSON.stringify({ 'sdp': rtcPeerConn.localDescription }), "room":SIGNAL_ROOM});
+	}, logError);
+}
+
+//Data Channel Specific methods
 function dataChannelStateChanged() {
 	if (dataChannel.readyState === 'open') {
 		displaySignalMessage("Data Channel open");
@@ -119,17 +138,10 @@ function receiveDataChannelMessage(event) {
 	displayMessage("From DataChannel: " + event.data);
 }
 
-function sendLocalDesc(desc) {
-	rtcPeerConn.setLocalDescription(desc, function () {
-		displaySignalMessage("sending local description");
-		io.emit('signal',{"type":"SDP", "message": JSON.stringify({ 'sdp': rtcPeerConn.localDescription }), "room":SIGNAL_ROOM});
-	}, logError);
-}
-			
+//Logging/Display Methods
 function logError(error) {
 	displaySignalMessage(error.name + ': ' + error.message);
 }
-
 
 function displayMessage(message) {
 	chatArea.innerHTML = chatArea.innerHTML + "<br/>" + message;
