@@ -12,6 +12,7 @@ var myName = document.querySelector("#myName");
 var myMessage = document.querySelector("#myMessage");
 var sendMessage = document.querySelector("#sendMessage");
 var chatArea = document.querySelector("#chatArea");
+var signalingArea = document.querySelector("#signalingArea");
 
 sendMessage.addEventListener('click', function(ev){
 	io.emit('send', {"author":myName.value, "message":myMessage.value, "room":ROOM});
