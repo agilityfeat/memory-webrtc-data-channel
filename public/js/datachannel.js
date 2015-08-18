@@ -9,7 +9,6 @@ It is for educational purposes only, and any other use is done at your own risk.
 //datachannel.js:  This file contains the WebRTC and DataChannel specific code
 
 //Signaling Code
-var ROOM = "chat";
 var SIGNAL_ROOM = "signaling";
 var myVideoArea = document.querySelector("#myVideoTag");
 var theirVideoArea = document.querySelector("#theirVideoTag");
@@ -27,19 +26,11 @@ var dataChannel;
 
 
 io = io.connect();
-io.emit('ready', {"chat_room": ROOM, "signal_room": SIGNAL_ROOM});
+io.emit('ready', {"signal_room": SIGNAL_ROOM});
 
 //Send a first signaling message to anyone listening
-//This normally would be on a button click
+//In other apps this would be on a button click, we are just doing it on page load
 io.emit('signal',{"type":"user_here", "message":"Are you ready for a call?", "room":SIGNAL_ROOM});
-
-io.on('announce', function(data) {
-	displayMessage(data.message);
-});
-
-io.on('message', function(data) {
-	displayMessage(data.author + ": " + data.message);
-});
 
 io.on('signaling_message', function(data) {
 	displaySignalMessage("Signal received: " + data.type);
