@@ -1,0 +1,10 @@
+{
+	"name": "memory-webrtc-data-channel",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"express": "4.x",
+		"ejs": "2.x",
+		"express.io": "1.x"
+	}
+}
