@@ -9,16 +9,8 @@ It is for educational purposes only, and any other use is done at your own risk.
 //datachannel.js:  This file contains the WebRTC and DataChannel specific code
 
 //Page controls
-var myName = document.querySelector("#myName");
-var myMessage = document.querySelector("#myMessage");
-var sendMessage = document.querySelector("#sendMessage");
 var chatArea = document.querySelector("#chatArea");
 var signalingArea = document.querySelector("#signalingArea");
-
-sendMessage.addEventListener('click', function(ev){
-	dataChannel.send(myName.value + " says " + myMessage.value);
-	ev.preventDefault();
-}, false);
 
 //Signaling Code Setup
 var SIGNAL_ROOM = "signaling";
@@ -39,7 +31,7 @@ io.emit('ready', {"signal_room": SIGNAL_ROOM});
 
 //Send a first signaling message to anyone listening
 //In other apps this would be on a button click, we are just doing it on page load
-io.emit('signal',{"type":"user_here", "message":"Are you ready for a call?", "room":SIGNAL_ROOM});
+io.emit('signal',{"type":"user_here", "message":"Would you like to play a game?", "room":SIGNAL_ROOM});
 
 io.on('signaling_message', function(data) {
 	displaySignalMessage("Signal received: " + data.type);
@@ -108,7 +100,6 @@ function receiveDataChannel(event) {
 }
 
 function receiveDataChannelMessage(event) {
-	displaySignalMessage("Incoming Message");
 	displayMessage("From DataChannel: " + event.data);
 	
 	if (event.data.split(" ")[0] == "memoryFlipTile") {

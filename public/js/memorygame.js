@@ -1,6 +1,9 @@
 // Scripted By Adam Khoury in connection with the following video tutorial:
 // http://www.youtube.com/watch?v=c_ohDPWmsM0
 // https://www.developphp.com/video/JavaScript/Memory-Game-Programming-Tutorial
+
+// Some changes made by @ArinSime to this Memory Game in order to accomodate use of WebRTC Data Channel to show a simple multi-player use case
+
 var memory_array = ['A','A','B','B','C','C','D','D','E','E','F','F','G','G','H','H','I','I','J','J','K','K','L','L'];
 var memory_values = [];
 var memory_tile_ids = [];
