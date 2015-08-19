@@ -22,8 +22,6 @@ sendMessage.addEventListener('click', function(ev){
 
 //Signaling Code Setup
 var SIGNAL_ROOM = "signaling";
-var myVideoArea = document.querySelector("#myVideoTag");
-var theirVideoArea = document.querySelector("#theirVideoTag");
 var configuration = {
 	'iceServers': [{
 		'url': 'stun:stun.l.google.com:19302'
@@ -86,30 +84,6 @@ function startSignaling() {
 		displaySignalMessage("on negotiation called");
 		rtcPeerConn.createOffer(sendLocalDesc, logError);
 	}  
-	
-	// once remote stream arrives, show it in the remote video element
-	rtcPeerConn.onaddstream = function (evt) {
-		displaySignalMessage("going to add their stream...");
-		theirVideoArea.src = URL.createObjectURL(evt.stream);
-	};
-	
-	// get a local stream, show it in our video tag and add it to be sent
-	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-	navigator.getUserMedia({
-		'audio': false,
-		'video': {
-			mandatory: {
-				minWidth: 320,
-				maxWidth: 320,
-				minHeight: 180,
-				maxHeight: 180
-			}
-		}
-	}, function (stream) {
-		displaySignalMessage("going to display my stream...");
-		myVideoArea.src = URL.createObjectURL(stream);
-		rtcPeerConn.addStream(stream);
-	}, logError);
 }
 
 function sendLocalDesc(desc) {
