@@ -115,9 +115,12 @@ function receiveDataChannelMessage(event) {
 		var tileToFlip = event.data.split(" ")[1];
 		displayMessage("Flipping tile " + tileToFlip);
 		var tile = document.querySelector("#" + tileToFlip);
-		flipTheTile(tile,"1");
+		var index = tileToFlip.split("_")[1];
+		var tile_value = memory_array[index];
+		flipTheTile(tile,tile_value);
 	} else if (event.data.split(" ")[0] == "newBoard") {
 		displayMessage("Setting up new board");
+		memory_array = event.data.split(" ")[1].split(",");
 		newBoard();
 	}
 	

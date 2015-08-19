@@ -17,7 +17,6 @@ Array.prototype.memory_tile_shuffle = function(){
 function newBoard(){
 	tiles_flipped = 0;
 	var output = '';
-    memory_array.memory_tile_shuffle();
 	for(var i = 0; i < memory_array.length; i++){
 		output += '<div id="tile_'+i+'" onclick="memoryFlipTile(this,\''+memory_array[i]+'\')"></div>';
 	}
@@ -71,7 +70,8 @@ function flipTheTile(tile,val){
 
 var setupBoard = document.querySelector("#setupBoard");
 setupBoard.addEventListener('click', function(ev){
+	memory_array.memory_tile_shuffle();
 	newBoard();
-	dataChannel.send("newBoard");
+	dataChannel.send("newBoard " + memory_array.toString());
 	ev.preventDefault();
 }, false);
