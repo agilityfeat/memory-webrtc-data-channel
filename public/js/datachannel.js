@@ -110,6 +110,14 @@ function receiveDataChannel(event) {
 function receiveDataChannelMessage(event) {
 	displaySignalMessage("Incoming Message");
 	displayMessage("From DataChannel: " + event.data);
+	
+	if (event.data.split(" ")[0] == "memoryFlipTile") {
+		var tileToFlip = event.data.split(" ")[1];
+		displayMessage("Flipping tile " + tileToFlip);
+		var tile = document.querySelector("#" + tileToFlip);
+		flipTheTile(tile,"1");
+	}
+	
 }
 
 //Logging/Display Methods
