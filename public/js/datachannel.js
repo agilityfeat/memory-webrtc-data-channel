@@ -116,6 +116,9 @@ function receiveDataChannelMessage(event) {
 		displayMessage("Flipping tile " + tileToFlip);
 		var tile = document.querySelector("#" + tileToFlip);
 		flipTheTile(tile,"1");
+	} else if (event.data.split(" ")[0] == "newBoard") {
+		displayMessage("Setting up new board");
+		newBoard();
 	}
 	
 }

@@ -68,3 +68,10 @@ function flipTheTile(tile,val){
 		}
 	}
 }
+
+var setupBoard = document.querySelector("#setupBoard");
+setupBoard.addEventListener('click', function(ev){
+	newBoard();
+	dataChannel.send("newBoard");
+	ev.preventDefault();
+}, false);
